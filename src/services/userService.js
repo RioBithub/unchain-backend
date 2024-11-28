@@ -6,9 +6,10 @@ import wrapper from "../utils/wrapper/wrapper.js"
 
 const createUser = async (payload)=>{
   const ctx = 'userService-createUser'
-  const { id, email } = payload;
+  
+  const { id, email, dateOfBirth } = payload;
   try {
-    const isExistUser = await prismaClient.user.count({
+    const isExistUser = await prismaClient.user.findFirst({
       where: {
         OR: [
           { id: id },
@@ -16,70 +17,31 @@ const createUser = async (payload)=>{
         ]
       }
     });
-    if (isExistUser===1) {
+    if (isExistUser) {
       logger.log(ctx, 'User already exist');
       return wrapper.error(new BadRequest('User already exist'));
     }
-    const result = await prismaClient.user.create({data: payload});
+
+    const data = { ...payload, dateOfBirth: new Date(dateOfBirth) };
+    const result = await prismaClient.user.create({data});
+    
     return wrapper.data(result, 'Success create user');
   } catch (error) {
     return wrapper.error(new InternalServer());
   }
 }
 
-const getUserByToken = async (payload)=>{
-  const { accessToken } = payload;
+const updateUser = async (payload)=>{
+  const { id, dateOfBirth } = payload;
   try {
-    const user = await prismaClient.user.findFirst({
-      where:{
-        accessToken : accessToken
-      },
-      omit:{
-        accessToken: true
-      },
-    });
-    
-    return wrapper.data(user, 'Success get user data');
-  } catch (error) {
-    return wrapper.error();
-  }
-}
-
-const updateUserTokenById = async (payload)=>{
-  const { id, accessToken } = payload;
-  
-  try {
-    const user = await prismaClient.user.update({
+    const result = await prismaClient.user.update({
       where: {
         id: id
       },
-      data: {
-        accessToken: accessToken
-      }
-    });
-    return wrapper.data(user, 'Success update user token');
-  } catch (error) {
-    return wrapper.error(new InternalServer());
-  }
-}
-
-const updateUserByLoggedIn = async (payload)=>{
-  const { accessToken } = payload;
-  try {
-    let isExistUser = await prismaClient.user.findFirst({
-      where: {
-        accessToken: accessToken
-      }
+      data: {...payload, dateOfBirth: new Date(dateOfBirth)}
     });
 
-    isExistUser = {...isExistUser,...payload};
-    const user = await prismaClient.user.update({
-      where: {
-        id: isExistUser.id
-      },
-      data: isExistUser
-    });
-    return wrapper.data(user, 'Success update user data');
+    return wrapper.data(result, 'Success update user');
   } catch (error) {
     return wrapper.error(new InternalServer());
   }
@@ -87,7 +49,5 @@ const updateUserByLoggedIn = async (payload)=>{
 
 export default {
   createUser,
-  getUserByToken,
-  updateUserTokenById,
-  updateUserByLoggedIn
+  updateUser
 }
