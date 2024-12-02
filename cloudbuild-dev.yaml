@@ -1,0 +1,21 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/dev-unchain', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/dev-unchain']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        gcloud run deploy dev-unchain \
+        --image gcr.io/$PROJECT_ID/dev-unchain \
+        --platform managed \
+        --region asia-southeast2 \
+        --allow-unauthenticated \
+        --update-env-vars DATABASE_URL=$DATABASE_URL,PORT=$PORT
+
+images:
+  - 'gcr.io/$PROJECT_ID/dev-unchain'
+
+timeout: '1200s'
