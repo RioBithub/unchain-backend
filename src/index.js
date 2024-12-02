@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors';
 import userRouter from "./router/userRouter.js";
 import logger from "./utils/logger/logger.js";
 import wrapper from "./utils/wrapper/wrapper.js";
@@ -8,10 +9,11 @@ import { CONFIG } from "./utils/constant/constants.js";
 import historyRouter from "./router/historyRouter.js";
 const app = express();
 
+app.use(cors());
 app.use(express.json())
 
-app.get('/api/v1', (req, res)=>{
-  res.end('OK!!!')
+app.get('/', (req, res)=>{
+  res.send({message: 'Server is running!!!'})
 });
 
 const routers = [userRouter, historyRouter]
