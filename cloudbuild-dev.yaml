@@ -17,5 +17,8 @@ steps:
 
 images:
   - 'gcr.io/$PROJECT_ID/dev-unchain'
+  
+options: 
+  logging: CLOUD_LOGGING_ONLY
 
 timeout: '1200s'
