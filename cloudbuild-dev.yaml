@@ -11,9 +11,10 @@ steps:
         gcloud run deploy dev-unchain \
         --image gcr.io/$PROJECT_ID/dev-unchain \
         --platform managed \
-        --region asia-southeast2 \
+        --region us-central1 \
         --allow-unauthenticated \
         --update-env-vars DATABASE_URL=${_DATABASE_URL}
+        --max-instances 3
 images:
   - 'gcr.io/$PROJECT_ID/dev-unchain'
 
