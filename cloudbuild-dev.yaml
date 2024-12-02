@@ -13,12 +13,12 @@ steps:
         --platform managed \
         --region asia-southeast2 \
         --allow-unauthenticated \
-        --update-env-vars DATABASE_URL=${_DATABASE_URL},PORT=${_PORT}
-
+        --update-env-vars DATABASE_URL=${_DATABASE_URL}
 images:
   - 'gcr.io/$PROJECT_ID/dev-unchain'
 
 options: 
+  automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
 
 timeout: '1200s'
