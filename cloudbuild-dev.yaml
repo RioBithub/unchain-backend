@@ -13,11 +13,11 @@ steps:
         --platform managed \
         --region asia-southeast2 \
         --allow-unauthenticated \
-        --update-env-vars DATABASE_URL=$DATABASE_URL,PORT=$PORT
+        --update-env-vars DATABASE_URL=${_DATABASE_URL},PORT=${_PORT}
 
 images:
   - 'gcr.io/$PROJECT_ID/dev-unchain'
-  
+
 options: 
   logging: CLOUD_LOGGING_ONLY
 
