@@ -7,6 +7,7 @@ import { NotFound } from "./utils/errors/NotFound.js";
 import httpCode from "./utils/constant/httpCode.js";
 import { CONFIG } from "./utils/constant/constants.js";
 import historyRouter from "./router/historyRouter.js";
+import dashboardRouter from "./router/dashboardRouter.js";
 const app = express();
 
 app.use(cors());
@@ -16,7 +17,7 @@ app.get('/', (req, res)=>{
   res.send({message: 'Server is running!!!'})
 });
 
-const routers = [userRouter, historyRouter]
+const routers = [userRouter, historyRouter, dashboardRouter]
 
 routers.forEach(e=> app.use('/api/v1', e.router))
 
