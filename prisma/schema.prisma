@@ -41,22 +41,23 @@ model History {
   user       User     @relation(fields: [user_id], references: [id])
   user_id    String
 
+  dashboard Dashboard? @relation(fields: [dashboard_id], references: [id])
+  dashboard_id Int?
   @@map("histories")
 }
 
-model Dashboard {
-  id                   Int      @id @default(autoincrement())
-  user_id              String   @unique
-  name                 String   @db.VarChar(100)
-  daily_sugar          Float    @default(0)
-  weekly_sugar         Float    @default(0)
-  monthly_sugar        Float    @default(0)
-  daily_consume        String?  @db.VarChar(255)
-  daily_consume_weight Float?   @default(0)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
 
-  user User @relation(fields: [user_id], references: [id]) // Relasi dengan atribut lengkap
-  
+model Dashboard {
+  id            Int        @id @default(autoincrement())
+  user_id       String     @unique
+  name          String     @db.VarChar(100)
+  daily_sugar   Float      @default(0)
+  weekly_sugar  Float      @default(0)
+  monthly_sugar Float      @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  user          User       @relation(fields: [user_id], references: [id])
+  histories     History[]  // List konsumsi harian melalui relasi ke tabel History
+
   @@map("dashboards")
 }
