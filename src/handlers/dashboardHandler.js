@@ -3,7 +3,7 @@ import wrapper from "../utils/wrapper/wrapper.js";
 import httpCode from "../utils/constant/httpCode.js";
 
 const getDashboard = async (req, res) => {
-  const userId = req.user.id; // Ambil user ID dari token pengguna
+  const userId = req.user.id; 
 
   const result = await dashboardService.getOrCreateDashboard(userId);
 
