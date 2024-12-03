@@ -22,7 +22,11 @@ const createUser = async (payload)=>{
       return wrapper.error(new BadRequest('User already exist'));
     }
 
-    const data = { ...payload, dateOfBirth: new Date(dateOfBirth) };
+    const data = { 
+      ...payload
+    };
+    
+    data.dateOfBirth = dateOfBirth ? new Date(dateOfBirth) : null;
     const result = await prismaClient.user.create({data});
     
     return wrapper.data(result, 'Success create user');

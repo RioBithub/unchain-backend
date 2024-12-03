@@ -40,6 +40,8 @@ model History {
   updatedAt  DateTime @updatedAt
   user       User     @relation(fields: [user_id], references: [id])
   user_id    String
+
+  @@map("histories")
 }
 
 model Dashboard {
@@ -55,4 +57,6 @@ model Dashboard {
   updatedAt            DateTime @updatedAt
 
   user User @relation(fields: [user_id], references: [id]) // Relasi dengan atribut lengkap
+  
+  @@map("dashboards")
 }
