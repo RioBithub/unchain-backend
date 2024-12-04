@@ -1,28 +1,31 @@
-import dashboardService from "../services/dashboardService.js";
-import wrapper from "../utils/wrapper/wrapper.js";
-import httpCode from "../utils/constant/httpCode.js";
+import { getDashboardService } from '../services/dashboardService.js';
 
-const getDashboard = async (req, res) => {
-  const userId = req.user.id; // Ambil user ID dari token pengguna
+export const getDashboard = async (req, res) => {
+  try {
+    const userId = req.query.userId;
 
-  const result = await dashboardService.getDashboardByUserId(userId);
+    if (!userId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'User ID is required',
+        code: 400,
+      });
+    }
 
-  result.err
-    ? wrapper.response(res, "fail", result, result.message, httpCode.NOT_FOUND)
-    : wrapper.response(res, "success", result, "Dashboard fetched successfully", httpCode.OK);
-};
+    const dashboardData = await getDashboardService(userId);
 
-const processDashboard = async (req, res) => {
-  const userId = req.user.id; // Ambil user ID dari token pengguna
-
-  const result = await dashboardService.processDashboardData(userId);
-
-  result.err
-    ? wrapper.response(res, "fail", result, result.message, httpCode.INTERNAL_SERVER)
-    : wrapper.response(res, "success", result, "Dashboard processed successfully", httpCode.OK);
-};
-
-export default {
-  getDashboard, // Tambahkan fungsi ini
-  processDashboard,
+    return res.status(200).json({
+      status: 'success',
+      data: dashboardData,
+      message: 'Dashboard fetched successfully',
+      code: 200,
+    });
+  } catch (error) {
+    console.error('Error in getDashboard:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+      code: 500,
+    });
+  }
 };

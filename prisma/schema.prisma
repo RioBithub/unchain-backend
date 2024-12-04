@@ -15,18 +15,17 @@ datasource db {
 }
 
 model User {
-  id String @id @db.VarChar(100) @unique
-  name String @db.VarChar(100)
-  isMale Boolean? @db.Boolean
+  id          String     @id @db.VarChar(100) @unique
+  name        String     @db.VarChar(100)
+  isMale      Boolean?   @db.Boolean
   dateOfBirth DateTime?  
-  weight Float? @db.Real
-  height Float? @db.Real
-  email String @db.VarChar(100) @unique
-  photoUrl String @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  histories History[]
-  dashboard   Dashboard?
+  weight      Float?     @db.Real
+  height      Float?     @db.Real
+  email       String     @db.VarChar(100) @unique
+  photoUrl    String     @db.VarChar(100)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  histories   History[]
 
   @@map("users")
 }
@@ -41,27 +40,5 @@ model History {
   user       User     @relation(fields: [user_id], references: [id])
   user_id    String
 
-  dashboard Dashboard? @relation(fields: [dashboard_id], references: [id])
-  dashboard_id Int?
   @@map("histories")
 }
-
-
-model Dashboard {
-  id                   Int        @id @default(autoincrement())
-  user_id              String     @unique
-  name                 String     @db.VarChar(100)
-  daily_sugar          Float      @default(0) // Total gula harian
-  weekly_sugar         Float      @default(0) // Total gula mingguan
-  monthly_sugar        Float      @default(0) // Total gula bulanan
-  daily_consume        Json?      // Konsumsi harian (list makanan/minuman + weight)
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime   @updatedAt
-
-  user                 User       @relation(fields: [user_id], references: [id]) // Relasi ke User
-  histories            History[] // List konsumsi harian melalui relasi ke tabel History
-
-  @@map("dashboards")
-}
-
-

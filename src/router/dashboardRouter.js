@@ -1,15 +1,8 @@
-import { Router } from "express";
-import dashboardHandler from "../handlers/dashboardHandler.js";
-import { verifyToken } from "../utils/middleware/auth.js";
+import express from 'express';
+import { getDashboard } from '../handlers/dashboardHandler.js';
 
-const router = Router();
+const router = express.Router();
 
-router.use(verifyToken);
-
-// Endpoint untuk memproses dashboard
-router.post("/dashboard", dashboardHandler.processDashboard);
-
-// Endpoint untuk mengambil dashboard
-router.get("/dashboard", dashboardHandler.getDashboard);
+router.get('/dashboard', getDashboard);
 
 export default { router };

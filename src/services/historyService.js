@@ -82,9 +82,9 @@ const deleteHistoryById = async (id, userId) => {
   };
   
 
-export default {
-  createHistory,
-  getHistoriesByUser,
-  updateHistoryById,
-  deleteHistoryById,
-};
+  export default {
+    createHistory,
+    getHistoriesByUser,
+    updateHistoryById,
+    deleteHistoryById,
+  };    
