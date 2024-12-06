@@ -16,8 +16,8 @@ WORKDIR /app
 
 COPY --from=build /app .
 
-RUN npm run prisma:dev
+RUN npm run prisma:generate
 
 EXPOSE 8080
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", " npm run prisma:push && npm start"]
