@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY --from=build /app .
 
-RUN npx prisma migrate dev
+RUN npm run prisma:dev
 
 EXPOSE 8080
 
