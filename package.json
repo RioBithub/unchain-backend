@@ -8,6 +8,7 @@
     "prisma:generate": "npx prisma generate",
     "prisma:push": "npx prisma db push",
     "prisma:dev": "npx prisma migrate dev",
+    "prisma:deploy": "npx prisma migrate deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "C242-PS395",
