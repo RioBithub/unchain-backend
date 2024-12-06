@@ -20,4 +20,4 @@ RUN npm run prisma:generate
 
 EXPOSE 8080
 
-CMD ["sh", "-c", " npm run prisma:push && npm start"]
+CMD ["sh", "-c", " npm run prisma:deploy && npm start"]
