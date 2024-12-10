@@ -6,6 +6,9 @@ const router = Router()
 
 router.use(verifyToken);
 router.post('/users', userHandler.createUser);
-router.put('/users/:id', userHandler.updateUser);
+router.put('/users/profile', userHandler.updateUser);
+router.get('/users/profile', userHandler.getProfile);
+router.get('/users/sugar-level', userHandler.predictSugarLevelUser);
+router.get('/users/behaviour', userHandler.predictSugarLevelUser);
 
 export default {router}
