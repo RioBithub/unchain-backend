@@ -1,4 +1,4 @@
-import { userCreateSchema, userUpdateSchema, byUserIdSchema } from "../validation/userValidation.js";
+import { userCreateSchema, userUpdateSchema } from "../validation/userValidation.js";
 import { validateSchema } from "../utils/validator/validator.js";
 import wrapper from "../utils/wrapper/wrapper.js";
 import userService from '../services/userService.js'
@@ -21,7 +21,7 @@ const createUser = async (req, res)=>{
 }
 
 const updateUser = async (req, res)=>{
-  const payload = {id: req.user.id, ...req.body};
+  const payload = {id: req.params.id, ...req.body};
   const checkValidation = validateSchema(userUpdateSchema, payload);
   const postRequest = async(result)=>{
     if (result.err) {
@@ -36,41 +36,7 @@ const updateUser = async (req, res)=>{
   sendResponse(await postRequest(checkValidation));
 }
 
-const getProfile = async (req, res)=>{
-  const payload = { id: req.user.id };
-  const checkValidation = validateSchema(byUserIdSchema, payload);
-  const postRequest = async(result)=>{
-    if (result.err) {
-      return result
-    }
-    return userService.getProfile(result);
-  }
-  const sendResponse = async(result)=>{
-    (result.err) ? wrapper.response(res, 'fail', result, 'Failed get user data', httpCode.INTERNAL_SERVER)
-      : wrapper.response(res, 'success', result, 'Success get user data', httpCode.OK);
-  };
-  sendResponse(await postRequest(checkValidation));
-}
-
-const predictSugarLevelUser = async (req, res)=>{
-  const payload = { id: req.user.id };
-  const checkValidation = validateSchema(byUserIdSchema, payload);
-  const postRequest = async(result)=>{
-    if (result.err) {
-      return result
-    }
-    return userService.predictSugarLevelUser(result);
-  }
-  const sendResponse = async(result)=>{
-    (result.err) ? wrapper.response(res, 'fail', result, 'Failed get sugar level user', httpCode.INTERNAL_SERVER)
-      : wrapper.response(res, 'success', result, 'Success get sugar level user', httpCode.OK);
-  };
-  sendResponse(await postRequest(checkValidation));
-}
-
 export default {
   createUser,
-  updateUser,
-  getProfile,
-  predictSugarLevelUser
+  updateUser
 }
