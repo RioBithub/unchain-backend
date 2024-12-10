@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 
 # Stage 2: Production
-FROM node:18-alpine
+FROM node:18-alpine3.20
 
 WORKDIR /app
 
