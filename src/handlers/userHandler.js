@@ -36,58 +36,7 @@ const updateUser = async (req, res)=>{
   sendResponse(await postRequest(checkValidation));
 }
 
-const getProfile = async (req, res)=>{
-  const payload = { id: req.user.id };
-  const checkValidation = validateSchema(byUserIdSchema, payload);
-  const postRequest = async(result)=>{
-    if (result.err) {
-      return result
-    }
-    return userService.getProfile(result);
-  }
-  const sendResponse = async(result)=>{
-    (result.err) ? wrapper.response(res, 'fail', result, 'Failed get user data', httpCode.INTERNAL_SERVER)
-      : wrapper.response(res, 'success', result, 'Success get user data', httpCode.OK);
-  };
-  sendResponse(await postRequest(checkValidation));
-}
-
-const predictSugarLevelUser = async (req, res)=>{
-  const payload = { id: req.user.id };
-  const checkValidation = validateSchema(byUserIdSchema, payload);
-  const postRequest = async(result)=>{
-    if (result.err) {
-      return result
-    }
-    return userService.predictSugarLevelUser(result);
-  }
-  const sendResponse = async(result)=>{
-    (result.err) ? wrapper.response(res, 'fail', result, 'Failed get sugar level user', httpCode.INTERNAL_SERVER)
-      : wrapper.response(res, 'success', result, 'Success get sugar level user', httpCode.OK);
-  };
-  sendResponse(await postRequest(checkValidation));
-}
-
-const predictUserBehaviour = async (req, res)=>{
-  const payload = { id: req.user.id };
-  const checkValidation = validateSchema(byUserIdSchema, payload);
-  const postRequest = async(result)=>{
-    if (result.err) {
-      return result
-    }
-    return userService.predictUserBehaviour(result);
-  }
-  const sendResponse = async(result)=>{
-    (result.err) ? wrapper.response(res, 'fail', result, 'Failed get user behaviour', httpCode.INTERNAL_SERVER)
-      : wrapper.response(res, 'success', result, 'Success get user behaviour', httpCode.OK);
-  };
-  sendResponse(await postRequest(checkValidation));
-}
-
 export default {
   createUser,
-  updateUser,
-  getProfile,
-  predictSugarLevelUser,
-  predictUserBehaviour
+  updateUser
 }

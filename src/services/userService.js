@@ -51,39 +51,7 @@ const updateUser = async (payload)=>{
   }
 }
 
-const predictUserBehaviour = async (payload)=>{
-  const { id } = payload;
-
-  try {
-    const result = Promise.all([
-      await prismaClient.history.findMany({
-        where: {
-          user_id: id
-        }
-      }),
-      await prismaClient.user.findFirst({
-        where:{id: id}
-      })
-    ]);
-    const histories = result[0]
-    const user = result[1]
-
-    const reportedDate = Array.from(new Set(histories.map(item => item.createdAt))).length;
-    const missingDay = Math.abs(new Date.now()-user.createdAt)
-
-    return wrapper.data({
-      reportedDate,
-      missingDay
-    }, 'Success get user data');
-  } catch (error) {
-    return wrapper.error(new InternalServer(error));
-  }
-}
-
 export default {
   createUser,
-  updateUser,
-  getProfile,
-  predictSugarLevelUser,
-  predictUserBehaviour
+  updateUser
 }
