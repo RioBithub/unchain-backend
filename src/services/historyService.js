@@ -1,10 +1,10 @@
 import { prismaClient } from "../config/database.js";
 import wrapper from "../utils/wrapper/wrapper.js";
 import { InternalServer } from "../utils/errors/InternalServer.js";
+import logger from "../utils/logger/logger.js";
 
 const createHistory = async (payload) => {
     const ctx = 'historyService-createHistory';
-    console.log("Payload sent to Prisma:", payload); // Debug log
   
     try {
       const history = await prismaClient.history.create({
@@ -21,7 +21,7 @@ const createHistory = async (payload) => {
       });
       return wrapper.data(history, 'History created successfully');
     } catch (error) {
-      console.error("Error in createHistory:", error);
+      logger.log(ctx, error)
       return wrapper.error(new InternalServer());
     }
   };
