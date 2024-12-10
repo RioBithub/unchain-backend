@@ -19,7 +19,12 @@ const userUpdateSchema = Joi.object({
   height: Joi.number().optional(),
 });
 
+const byUserIdSchema = Joi.object({
+  id: Joi.string().required(),
+});
+
 export {
   userCreateSchema,
-  userUpdateSchema
+  userUpdateSchema,
+  byUserIdSchema
 }
