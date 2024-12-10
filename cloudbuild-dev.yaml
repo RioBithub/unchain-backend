@@ -13,7 +13,7 @@ steps:
         --platform managed \
         --region us-central1 \
         --allow-unauthenticated \
-        --update-env-vars DATABASE_URL=${_DATABASE_URL, MODEL_SUGAR_LEVEL_URL=${_MODEL_SUGAR_LEVEL_URL} \
+        --update-env-vars DATABASE_URL=${_DATABASE_URL}, MODEL_SUGAR_LEVEL_URL=${_MODEL_SUGAR_LEVEL_URL} \
         --max-instances 3
 images:
   - 'gcr.io/$PROJECT_ID/dev-unchain'
