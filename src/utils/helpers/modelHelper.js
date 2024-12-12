@@ -1,6 +1,8 @@
-import tf from '@tensorflow/tfjs-node';
+import * as tf from '@tensorflow/tfjs-node';
+import YggdrasilDecisionForests from 'yggdrasil-decision-forests';
 import logger from '../logger/logger.js';
 import { InternalServer } from '../errors/InternalServer.js';
+const ydf = await YggdrasilDecisionForests();
 
 const loadModel = async (url)=>{
   const ctx = 'modelHepler-loadModel'
@@ -30,7 +32,32 @@ const predictSugarLevel = async (url, transformedData, sugarInTake)=>{
   }
 }
 
+const predictBehaviour = async (url, predictionData)=>{
+  const ctx = 'modelHepler-predictBehaviour'
+  const model = await (await fetch(url).then(r => r.blob())).arrayBuffer()
+
+  try {
+    const tfdfModel = await ydf.loadModelFromZipBlob(Buffer.from(model));
+    let res = await tfdfModel.predict(
+      {
+        'avg_sugar':[predictionData.avgSugar],
+        'std_sugar':[predictionData.stdSugar],
+        'max_sugar':[predictionData.maxSugar],
+        'excess_days':[predictionData.excessDay],
+        'missing_days':[predictionData.missingDays],
+        'zero_days':[predictionData.zeroDays],
+        'fluctuation':[predictionData.stdSugar],
+        'persist_overconsumption':[predictionData.persistOverConsumption]
+      }
+    )
+    return res
+  } catch (e) {
+    logger.log(ctx, e);
+    throw e;
+  }
+}
+
 export {
-  loadModel,
-  predictSugarLevel
+  predictSugarLevel,
+  predictBehaviour
 }

@@ -25,7 +25,8 @@
     "joi": "^17.13.3",
     "natural": "^8.0.1",
     "unchain-backend": "file:",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "yggdrasil-decision-forests": "^0.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
