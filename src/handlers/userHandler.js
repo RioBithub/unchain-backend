@@ -68,9 +68,27 @@ const predictSugarLevelUser = async (req, res)=>{
   sendResponse(await postRequest(checkValidation));
 }
 
+const predictBehaviourUser = async (req, res)=>{
+  const payload = { id: req.user.id };
+  const checkValidation = validateSchema(byUserIdSchema, payload);
+  const postRequest = async(result)=>{
+    if (result.err) {
+      return result
+    }
+    
+    return userService.predictBehaviourUser(result);
+  }
+  const sendResponse = async(result)=>{
+    (result.err) ? wrapper.response(res, 'fail', result, 'Failed get user behaviour', httpCode.INTERNAL_SERVER)
+      : wrapper.response(res, 'success', result, 'Success get user behaviour', httpCode.OK);
+  };
+  sendResponse(await postRequest(checkValidation));
+}
+
 export default {
   createUser,
   updateUser,
   getProfile,
-  predictSugarLevelUser
+  predictSugarLevelUser,
+  predictBehaviourUser
 }

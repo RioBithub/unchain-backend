@@ -9,5 +9,6 @@ router.post('/users', userHandler.createUser);
 router.put('/users/profile', userHandler.updateUser);
 router.get('/users/profile', userHandler.getProfile);
 router.get('/users/sugar-level', userHandler.predictSugarLevelUser);
+router.get('/users/behaviour', userHandler.predictBehaviourUser);
 
 export default {router}

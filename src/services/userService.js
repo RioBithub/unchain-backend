@@ -1,10 +1,10 @@
 import { prismaClient } from "../config/database.js";
 import { BadRequest } from "../utils/errors/BadRequest.js";
 import { InternalServer } from "../utils/errors/InternalServer.js";
-import { predictSugarLevel } from "../utils/helpers/modelHelper.js";
+import * as modelHelper from "../utils/helpers/modelHelper.js";
 import logger from "../utils/logger/logger.js";
 import wrapper from "../utils/wrapper/wrapper.js"
-import { CONFIG, SUGAR_LEVEL } from "../utils/constant/constants.js";
+import { CONFIG, MILLISECONDS, SUGAR_LEVEL, BEHAVIOUR_USER, MESSAGE_OPTION } from "../utils/constant/constants.js";
 import natural from "natural";
 
 const createUser = async (payload)=>{
@@ -105,7 +105,7 @@ const predictSugarLevelUser = async (payload)=>{
     const fillData = new Array(1375).fill(0);
     transformedData = transformedData.concat(fillData).splice(0,1375)
     
-    const predicted = await predictSugarLevel(CONFIG.MODEL_SUGAR_LEVEL_URL, transformedData, sugarInTake);
+    const predicted = await modelHelper.predictSugarLevel(CONFIG.MODEL_SUGAR_LEVEL_URL, transformedData, sugarInTake);
     const max = Math.max(...predicted)
     const idxMax = [...predicted].findIndex(e=>e===max)
     
@@ -119,9 +119,74 @@ const predictSugarLevelUser = async (payload)=>{
   }
 }
 
+const predictBehaviourUser = async (payload)=>{
+  const { id } = payload;
+  console.log(id);
+  
+
+  try {
+    const results = await Promise.all([
+      prismaClient.user.findUnique({
+        where: {
+          id: id
+        },
+      }),
+      prismaClient.$queryRaw`
+        SELECT DATE(h."createdAt") AS date, SUM(h.weight) AS weight
+        FROM histories h
+        WHERE h.user_id = ${id}
+        GROUP BY DATE(h."createdAt");
+      `
+    ]);
+    
+    const user = results[0];
+    const histories = results[1].map(e=>e.weight);
+    const firstDay = new Date(user.createdAt);
+    const today = new Date();
+    
+
+    const reportedDays = histories.length;
+    const timeDifference = Math.abs(today-firstDay);
+    const totalDays = Math.ceil(timeDifference / MILLISECONDS);
+    const missingDays = totalDays - reportedDays;
+    const zeroDays = histories.filter(e=>e===0).length
+    const persistOverConsumption = histories.filter(e=>e>70).length
+    const excessDay = histories.filter(e=>e>100).length;
+    const totalConsume = histories.reduce((acc, curr)=>acc+curr,0);
+    const avgSugar = totalConsume/histories.length;
+    const stdSugar = Math.sqrt(histories.map(x => Math.pow(x - avgSugar, 2)).reduce((a, b) => a + b) / reportedDays);
+    const maxSugar = Math.max(...histories);
+
+    const predictionData = 
+    [
+      avgSugar,
+      stdSugar,
+      maxSugar,
+      excessDay,
+      missingDays,
+      zeroDays,
+      stdSugar,
+      persistOverConsumption
+    ]
+
+    const predicted = await modelHelper.predictBehaviour(CONFIG.MODEL_USER_BEHAVIOUR_URL, predictionData);
+    const idxMax = predicted.findIndex(e=>e===Math.max(...predicted))
+    const behaviourStatus = BEHAVIOUR_USER[idxMax];
+    const randomNumber = Math.floor(Math.random() * MESSAGE_OPTION[behaviourStatus].length)
+    const resultData = {
+      behaviourStatus,
+      message: MESSAGE_OPTION[behaviourStatus][randomNumber]
+    }
+    return wrapper.data(resultData, 'Success get user behaviour');
+  } catch (error) {
+    return wrapper.error(new InternalServer(error));
+  }
+}
+
 export default {
   createUser,
   updateUser,
   getProfile,
-  predictSugarLevelUser
+  predictSugarLevelUser,
+  predictBehaviourUser
 }
