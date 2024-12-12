@@ -12,6 +12,10 @@ Postgresql
 
 ### API Documentation
 
+This API documentation provides a complete guide to integrating and managing Unchain application services. With features that include user management, activity history, and dashboards, this API makes it easy for developers to implement the necessary functionality for their applications.
+
+[API Documentation](https://documenter.getpostman.com/view/6720324/2sAYHxn3dA)
+
 ### Installing
 
 A step by step series of examples that tell you have to get a development env running
@@ -19,6 +23,8 @@ A step by step series of examples that tell you have to get a development env ru
 - Create ENV file (.env) with this configuration:
 ```
 DATABASE_URL=
+MODEL_SUGAR_LEVEL_URL = 
+MODEL_USER_BEHAVIOUR_URL = 
 ```
 - Then run this command
 ```
@@ -66,7 +72,7 @@ git push origin v1.0
 
 ### Built With
 
-- [Express] The rest framework used
+- [Express] - The rest framework used
 - [Npm] - Dependency Management
 - [Docker] - Container Management
 
