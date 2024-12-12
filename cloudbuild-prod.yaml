@@ -1,22 +1,22 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/prod-unchain:$TAG_NAME', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/unchain-backend:$TAG_NAME', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/prod-unchain:$TAG_NAME']
+    args: ['push', 'gcr.io/$PROJECT_ID/unchain-backend:$TAG_NAME']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
       - -c
       - |
         gcloud run deploy prod-unchain \
-        --image gcr.io/$PROJECT_ID/prod-unchain:$TAG_NAME \
+        --image gcr.io/$PROJECT_ID/unchain-backend:$TAG_NAME \
         --platform managed \
         --region asia-southeast2 \
         --allow-unauthenticated \
         --update-env-vars DATABASE_URL=${_DATABASE_URL},MODEL_SUGAR_LEVEL_URL=${_MODEL_SUGAR_LEVEL_URL},MODEL_USER_BEHAVIOUR_URL=${_MODEL_USER_BEHAVIOUR_URL} \
         --max-instances 3
 images:
-  - 'gcr.io/$PROJECT_ID/prod-unchain:$TAG_NAME'
+  - 'gcr.io/$PROJECT_ID/unchain-backend:$TAG_NAME'
 
 options: 
   automapSubstitutions: true
