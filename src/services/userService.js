@@ -64,6 +64,9 @@ const getProfile = async (payload)=>{
         id: id
       },
     });
+    if (!result) {
+      return wrapper.error(new BadRequest('Data not found'));
+    }
 
     return wrapper.data(result, 'Success get user data');
   } catch (error) {
@@ -120,10 +123,11 @@ const predictSugarLevelUser = async (payload)=>{
 }
 
 const predictBehaviourUser = async (payload)=>{
+  const ctx = 'userService-predictBehaviourUser'
   const { id } = payload;
-  console.log(id);
+  let behaviourStatus = BEHAVIOUR_USER[3];
+  let randomNumber = Math.floor(Math.random() * MESSAGE_OPTION[behaviourStatus].length)
   
-
   try {
     const results = await Promise.all([
       prismaClient.user.findUnique({
@@ -138,6 +142,14 @@ const predictBehaviourUser = async (payload)=>{
         GROUP BY DATE(h."createdAt");
       `
     ]);
+
+    if (results[1].length === 0) {
+      const resultData = {
+        behaviourStatus,
+        message: MESSAGE_OPTION[behaviourStatus][randomNumber]
+      }
+      return wrapper.data(resultData, 'Success get user behaviour');
+    }
     
     const user = results[0];
     const histories = results[1].map(e=>e.weight);
@@ -171,14 +183,15 @@ const predictBehaviourUser = async (payload)=>{
 
     const predicted = await modelHelper.predictBehaviour(CONFIG.MODEL_USER_BEHAVIOUR_URL, predictionData);
     const idxMax = predicted.findIndex(e=>e===Math.max(...predicted))
-    const behaviourStatus = BEHAVIOUR_USER[idxMax];
-    const randomNumber = Math.floor(Math.random() * MESSAGE_OPTION[behaviourStatus].length)
+    behaviourStatus = BEHAVIOUR_USER[idxMax];
+    randomNumber = Math.floor(Math.random() * MESSAGE_OPTION[behaviourStatus].length)
     const resultData = {
       behaviourStatus,
       message: MESSAGE_OPTION[behaviourStatus][randomNumber]
     }
     return wrapper.data(resultData, 'Success get user behaviour');
   } catch (error) {
+    logger.log(ctx, error)
     return wrapper.error(new InternalServer(error));
   }
 }
