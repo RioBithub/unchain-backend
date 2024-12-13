@@ -78,7 +78,8 @@ const predictSugarLevelUser = async (payload)=>{
   const ctx = 'userService-predictSugarLevelUser'
   const tfIdf = new natural.TfIdf();
   const { id } = payload;
-  const oneWeekAgo = new Date(new Date().getDate() - 7);
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate()-7);
 
   try {
     let histories =
@@ -170,7 +171,7 @@ const predictBehaviourUser = async (payload)=>{
     const maxSugar = Math.max(...histories);
 
     const predictionData = 
-    [
+    {
       avgSugar,
       stdSugar,
       maxSugar,
@@ -179,7 +180,7 @@ const predictBehaviourUser = async (payload)=>{
       zeroDays,
       stdSugar,
       persistOverConsumption
-    ]
+    }
 
     const predicted = await modelHelper.predictBehaviour(CONFIG.MODEL_USER_BEHAVIOUR_URL, predictionData);
     const idxMax = predicted.findIndex(e=>e===Math.max(...predicted))
