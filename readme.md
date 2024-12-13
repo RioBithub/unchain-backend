@@ -5,7 +5,7 @@ This Project is used to handle unchain app requirement
 What things you need to install the software and how to install them
 
 ```
-Node.js version 18
+Node.js version 18 or latest
 Node Package Manager
 Postgresql
 ```
@@ -16,7 +16,7 @@ This API documentation provides a complete guide to integrating and managing Unc
 
 [API Documentation](https://documenter.getpostman.com/view/6720324/2sAYHxn3dA)
 
-### Installing
+### Installing and Run Local Development
 
 A step by step series of examples that tell you have to get a development env running
 
@@ -29,6 +29,8 @@ MODEL_USER_BEHAVIOUR_URL =
 - Then run this command
 ```
 $ npm install
+$ npm run prisma:ganerate
+$ npm run prisma:dev
 $ npm run dev
 ```
 
@@ -66,8 +68,8 @@ How to deploy a project using Google Cloud Build with a cloudbuild-prod.yaml con
 
 **Push a Tag to Your Repository**
 ```
-git tag v1.0
-git push origin v1.0
+$ git tag v1.0
+$ git push origin v1.0
 ```
 
 ### Built With
